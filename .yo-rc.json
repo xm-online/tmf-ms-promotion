@@ -4,7 +4,7 @@
       "packageName": "com.icthh.xm.tmf.ms.promotion",
       "nativeLanguage": "en"
     },
-    "jhipsterVersion": "5.7.2",
+    "jhipsterVersion": "6.5.1",
     "applicationType": "microservice",
     "baseName": "promotion",
     "packageName": "com.icthh.xm.tmf.ms.promotion",
@@ -28,6 +28,8 @@
       "cucumber"
     ],
     "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
     "otherModules": [],
     "enableTranslation": true,
     "clientPackageManager": "npm",
@@ -35,6 +37,7 @@
     "languages": [
       "en"
     ],
+    "blueprints": [],
     "skipClient": true,
     "skipUserManagement": true
   }

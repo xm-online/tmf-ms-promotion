@@ -111,7 +111,7 @@ jhipster:
             client-id: internal
             client-secret: internal
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: resource@localhost
+        from: promotion@localhost
         base-url: http://127.0.0.1:8710
     metrics:
         logs: # Reports metrics in the logs

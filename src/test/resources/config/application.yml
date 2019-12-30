@@ -25,6 +25,11 @@ spring:
         password:
         hikari:
             auto-commit: false
+    cloud:
+        discovery:
+            enabled: false
+        consul:
+            enabled: false
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedH2Dialect
         database: H2

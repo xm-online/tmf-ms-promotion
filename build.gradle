@@ -27,6 +27,7 @@ plugins {
     id "org.sonarqube"
     id "io.spring.nohttp"
     id "com.github.spotbugs"
+    id "org.openapi.generator"
     id "pmd"
     id 'checkstyle'
     id 'war'
@@ -44,6 +45,7 @@ assert System.properties["java.specification.version"] == "11" || "12" || "13"
 
 apply from: "gradle/docker.gradle"
 apply from: "gradle/sonar.gradle"
+apply from: 'gradle/swagger.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty("prod")) {
@@ -319,7 +321,6 @@ dependencies {
     testImplementation "org.hamcrest:hamcrest-library"
     testImplementation "com.h2database:h2"
     liquibaseRuntime "com.h2database:h2"
-    implementation "org.openapitools:jackson-databind-nullable:${jackson_databind_nullable_version}"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 

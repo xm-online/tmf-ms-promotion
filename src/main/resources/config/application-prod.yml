@@ -19,12 +19,6 @@ logging:
         com.icthh.xm.tmf.ms.promotion: INFO
         io.github.jhipster: INFO
 
-management:
-    metrics:
-        export:
-            prometheus:
-                enabled: false
-
 spring:
     devtools:
         restart:

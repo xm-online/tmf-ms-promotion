@@ -47,6 +47,7 @@ spring:
         username: promotion
         password:
         hikari:
+            poolName: Hikari
             auto-commit: false
     h2:
         console:
@@ -62,7 +63,8 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
     liquibase:
-        contexts: dev
+        # Remove 'faker' if you do not want the sample data to be loaded automatically
+        contexts: dev, faker
     mail:
         host: localhost
         port: 25
@@ -82,7 +84,7 @@ spring:
             discovery:
                 enabled: true
     kafka:
-        bootstrap-servers: localhost:9093
+        bootstrap-servers: localhost:9092
 server:
     port: 8712
 
@@ -93,8 +95,6 @@ server:
 # ===================================================================
 
 jhipster:
-    http:
-        version: V_1_1 # To use HTTP/2 you will need to activate TLS (see application-tls.yml)
     # CORS is disabled by default on microservices, as you should access them through a gateway.
     # If you want to enable it, please uncomment the configuration below.
     # cors:
@@ -112,16 +112,13 @@ jhipster:
             client-secret: internal
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: promotion@localhost
-        base-url: http://127.0.0.1:8712
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        jmx:
-            enabled: true
-        prometheus:
-            enabled: false #expose metrics via prometheus
-        logs: # Reports Dropwizard metrics in the logs
+        base-url: http://127.0.0.1:8710
+    metrics:
+        logs: # Reports metrics in the logs
             enabled: false
             report-frequency: 60 # in seconds
     logging:
+        use-json-format: false # By default, logs are not in Json format
         logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
             enabled: false
             host: localhost

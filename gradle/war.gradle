@@ -1,7 +1,7 @@
 apply plugin: "war"
 
 bootWar {
-    mainClassName = "com.icthh.xm.tmf.ms.promotion.PromotionApp"
+    mainClass = "com.icthh.xm.tmf.ms.promotion.PromotionApp"
     includes = ["WEB-INF/**", "META-INF/**"]
 }
 

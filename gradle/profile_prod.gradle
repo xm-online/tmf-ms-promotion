@@ -1,17 +1,13 @@
-apply plugin: 'org.springframework.boot'
-apply plugin: 'com.gorylenko.gradle-git-properties'
-
 dependencies {
-    testImplementation "com.h2database:h2"
+    implementation "org.postgresql:postgresql"
+    testImplementation "org.testcontainers:testcontainers-postgresql"
 }
 
-def profiles = 'prod'
-if (project.hasProperty('no-liquibase')) {
-    profiles += ',no-liquibase'
-}
-
-if (project.hasProperty('swagger')) {
-    profiles += ',swagger'
+def springProfiles = "prod"
+ext {
+    if (project.hasProperty("api-docs")) {
+        springProfiles += ",api-docs"
+    }
 }
 
 springBoot {
@@ -19,32 +15,21 @@ springBoot {
 }
 
 bootRun {
-    args = []
+    args = ["--spring.profiles.active=${springProfiles}"]
 }
 
 
 processResources {
     inputs.property('version', version)
-    inputs.property('springProfiles', profiles)
-    filesMatching('**/application.yml') {
+    inputs.property('springProfiles', springProfiles)
+    filesMatching("**/application.yml") {
         filter {
-            it.replace('#project.version#', version)
+            it.replace("@project.version@", version)
         }
     }
-    filesMatching('**/bootstrap.yml') {
+    filesMatching("**/bootstrap.yml") {
         filter {
-            it.replace('#spring.profiles.active#', profiles)
+            it.replace("@spring.profiles.active@", springProfiles)
         }
     }
 }
-
-generateGitProperties {
-    onlyIf {
-        !source.isEmpty()
-    }
-}
-
-gitProperties {
-    keys = ['git.branch', 'git.commit.id.abbrev', 'git.commit.id.describe']
-}
-

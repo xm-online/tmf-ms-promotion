@@ -22,8 +22,6 @@ script:
     then
         PROJECT_VERSION=$(./gradlew -q  getProjectVersion);
         export SONAR_PK=$(echo  -n $TRAVIS_REPO_SLUG | sed -e 's/\//:/g');
-        ./gradlew -x test --no-daemon sonarqube -Dsonar.projectKey="$SONAR_PK"
-        -Dsonar.projectName="$SONAR_PK" -Dsonar.java.binaries="." -Dsonar.projectVersion="$IMAGE_BRANCH";
         TAGS="$PROJECT_VERSION $PROJECT_VERSION-$TRAVIS_BUILD_NUMBER $(echo $PROJECT_VERSION | awk -F '.' '{printf $1"."$2" "$1}') latest";
     else
         TAGS="$IMAGE_BRANCH $IMAGE_BRANCH-$TRAVIS_BUILD_NUMBER";
@@ -35,8 +33,9 @@ script:
         docker push $DOCKER_REPO:$TAG;
     done
 
-cache: false
-
+cache:
+  directories:
+  - "~/.gradle/"
 env:
   global:
   - secure: BVpHVhRbMdGs+t21QlZDtjevc24VOtYec11WqGzzdKwLDc4T/DWJmeCtSyO/cuOI6aAe0QnfejswxveswdkYzvRTfoG0d85Es7HRjQJ/MvjJ379w7ZmuJKh6O7jdcWkxHt0ACZfUo2NMznQ6YCZj5Vk3CWPsPAkEsXAcXLXkhnGRnzfmX8/tIwvdX2uIVa8AiDIm4976zXZQv4g3HMrvV7LgD0e3iYN8wDAR029DALcpn29y2B/nZSw1Sox1dYEoCOqvFkrpMMrTaoqwwnY73zPUzksDcG6pmbBRjE2YLyMcBnJM2oMFq6Eed3Oi/ZJcACb1qZKDKuazFHBZm6vkPrQlXWSD9KjR0/7kxq8/ZUrfxHRmS92siT7o6paM8ul2Vfe6es+ZK9+zCmXNR1Yd0HafS8ZqQPmIdfks+lnrJaLbaXVwoE773ZZnuB9rKDhQf/3MTQAxgngyyiGwC6yYMvtMM+6hLgoT3U72g/nI8AH6Rcbk5Cb0EggFREVrI8OvR3CUCMY5E0ZWGPAQ8av2daZAgWzCE2/1Lxk45LpRNUNjxdxxQS85Wu5EcMEzKch2Rd9LAkPnokjitpGWcsKI8CnUZc8L43w3XM601+8gaQgnR0MKd8wIZKGFV99Yz2YvDc47vSLAjDkD/TbKLXbz8n3whND4kOeUNCvg4atTmLg=

@@ -195,7 +195,6 @@ jhipster:
         content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
 
 application:
-    specification-path-pattern: /config/tenants/{tenantName}/${spring.application.name}/example-of-microservice-spec.yml
     tenant-ignored-path-list: /v2/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health, /management/prometheus
     timeline-ignored-http-methods:
 

@@ -52,7 +52,7 @@ spring:
         cache: false
 
 server:
-    port: 8081
+    port: 8712
     shutdown: graceful # see https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-graceful-shutdown
     compression:
         enabled: true

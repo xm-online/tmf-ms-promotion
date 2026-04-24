@@ -170,8 +170,6 @@ springdoc:
 xm-config:
     enabled: true
     xmConfigUrl: http://config
-    configMode: XM_MS_CONFIG
-    configDirPath: C:\Users\Yaroslav\IdeaProjects\xm-ms-config-repository
     kafka-config-topic: config_topic
 
 # Properties to be exposed on the /info management endpoint

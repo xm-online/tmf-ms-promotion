@@ -18,6 +18,7 @@ import java.time.Month;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -142,9 +143,8 @@ public class HibernateTimeZoneIntTest extends AbstractSpringBootTest {
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(request);
         String expectedValue = dateTimeWrapper
             .getOffsetTime()
-            .toLocalTime()
             .atDate(LocalDate.of(1970, Month.JANUARY, 1))
-            .atZone(ZoneId.systemDefault())
+            .withOffsetSameInstant(ZoneOffset.UTC)
             .format(timeFormatter);
 
         assertThatDateStoredValueIsEqualToInsertDateValueOnGMTTimeZone(resultSet, expectedValue);

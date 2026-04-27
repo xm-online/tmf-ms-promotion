@@ -3,14 +3,22 @@ package com.icthh.xm.tmf.ms.promotion.config.timezone;
 import com.icthh.xm.tmf.ms.promotion.AbstractSpringBootTest;
 import com.icthh.xm.tmf.ms.promotion.repository.timezone.DateTimeWrapper;
 import com.icthh.xm.tmf.ms.promotion.repository.timezone.DateTimeWrapperRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static java.lang.String.format;
@@ -31,7 +39,7 @@ public class HibernateTimeZoneIntTest extends AbstractSpringBootTest {
     private DateTimeFormatter timeFormatter;
     private DateTimeFormatter dateFormatter;
 
-    @Before
+    @BeforeEach
     public void setup() {
         dateTimeWrapper = new DateTimeWrapper();
         dateTimeWrapper.setInstant(Instant.parse("2014-11-12T05:50:00.0Z"));

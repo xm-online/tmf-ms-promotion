@@ -80,6 +80,8 @@ management:
                 enabled: true
 
 jhipster:
+    clientApp:
+        name: 'promotionApp'
     async:
         core-pool-size: 1
         max-pool-size: 50
@@ -92,7 +94,6 @@ jhipster:
             enabled: false
             host: localhost
             port: 5000
-            queue-size: 512
     security:
         authentication:
             jwt:
@@ -105,10 +106,7 @@ jhipster:
             token-service-id: uaa
             client-id: internal
             client-secret: internal
-    metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
-        logs: # Reports metrics in the logs
-            enabled: false
-            report-frequency: 60 # in seconds
+        content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
 
 # ===================================================================
 # Application specific properties
@@ -126,6 +124,3 @@ application:
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
     tenant-ignored-path-list: /swagger-resources/configuration/ui, /management/health, /oauth/token_key, /h2-console
-    lep:
-        tenant-script-storage: XM_MS_CONFIG
-        lep-resource-path-pattern: /config/tenants/{tenantName}/entity/lep/resources/**/*

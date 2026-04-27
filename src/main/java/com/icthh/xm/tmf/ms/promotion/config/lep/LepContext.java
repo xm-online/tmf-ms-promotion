@@ -8,10 +8,21 @@ import org.springframework.web.client.RestTemplate;
 
 public class LepContext extends BaseLepContext {
 
-    public TenantConfigService tenantConfigService;
-    public RestTemplate restTemplate;
-    public CommonsService commonsService;
-    public PermissionCheckService permissionCheckService;
+    public LepCommons commons;
+    public LepServices services;
+    public LepTemplates templates;
+
+    public static class LepCommons {
+        public CommonsService commonsService;
+    }
+
+    public static class LepServices {
+        public TenantConfigService tenantConfigService;
+        public PermissionCheckService permissionService;
+    }
+
+    public static class LepTemplates {
+        public RestTemplate rest;
+    }
 
 }
-

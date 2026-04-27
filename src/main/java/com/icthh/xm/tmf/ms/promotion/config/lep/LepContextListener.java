@@ -33,10 +33,16 @@ public class LepContextListener implements LepContextFactory {
     @Override
     public BaseLepContext buildLepContext(LepMethod lepMethod) {
         LepContext lepContext = new LepContext();
-        lepContext.tenantConfigService = tenantConfigService;
-        lepContext.restTemplate = restTemplate;
-        lepContext.commonsService = commonsService;
-        lepContext.permissionCheckService = permissionCheckService;
+
+        lepContext.commons = new LepContext.LepCommons();
+        lepContext.commons.commonsService = commonsService;
+
+        lepContext.services = new LepContext.LepServices();
+        lepContext.services.tenantConfigService = tenantConfigService;
+        lepContext.services.permissionService = permissionCheckService;
+
+        lepContext.templates = new LepContext.LepTemplates();
+        lepContext.templates.rest = restTemplate;
 
         return lepContext;
     }

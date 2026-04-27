@@ -34,9 +34,6 @@ public class LepContextListener implements LepContextFactory {
     public BaseLepContext buildLepContext(LepMethod lepMethod) {
         LepContext lepContext = new LepContext();
 
-        lepContext.commons = new LepContext.LepCommons();
-        lepContext.commons.commonsService = commonsService;
-
         lepContext.services = new LepContext.LepServices();
         lepContext.services.tenantConfigService = tenantConfigService;
         lepContext.services.permissionService = permissionCheckService;

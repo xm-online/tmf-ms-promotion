@@ -63,6 +63,8 @@ management:
 
 spring:
     main:
+        application:
+            name: promotion
         allow-bean-definition-overriding: true
         web-application-type: servlet
     cloud:
@@ -102,7 +104,7 @@ spring:
             ddl-auto: none
             naming:
                 physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+                implicit-strategy: org.springframework.boot.hibernate.SpringImplicitNamingStrategy
         properties:
             hibernate.jdbc.time_zone: UTC
             hibernate.timezone.default_storage: NORMALIZE
@@ -120,7 +122,11 @@ spring:
     jackson:
         deserialization:
             fail-on-unknown-properties: false
+        serialization:
+            INDENT_OUTPUT: true
         default-property-inclusion: non_empty
+        mapper:
+            sort-properties-alphabetically: false
     kafka:
         bootstrap-servers: localhost:9092
         #  To start using feign client with authentication, use this configuration and provide correct

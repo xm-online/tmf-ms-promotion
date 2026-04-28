@@ -24,3 +24,36 @@ file("sonar-project.properties").withReader {
         }
     }
 }
+
+apply plugin: 'org.openapi.generator'
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
+    outputDir = "$buildDir/openapi".toString()
+    apiPackage = "com.icthh.xm.tmf.ms.promotion.web.api"
+    modelPackage = "com.icthh.xm.tmf.ms.promotion.web.api.model"
+    apiFilesConstrainedTo = [""]
+    modelFilesConstrainedTo = [""]
+    supportingFilesConstrainedTo = ["ApiUtil.java"]
+    configOptions = [
+        delegatePattern: "true",
+        useSpringBoot4: "true",
+        useJakartaEe: "true",
+        interfaceOnly: "false"
+    ]
+    validateSpec = true
+    importMappings = [
+        Problem: "org.zalando.problem.Problem"
+    ]
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir file("${project.buildDir.path}/openapi/src/main/java")
+        }
+    }
+}
+
+compileJava.dependsOn("openApiGenerate")

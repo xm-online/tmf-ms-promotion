@@ -3,7 +3,6 @@ package com.icthh.xm.tmf.ms.promotion.web.rest;
 import com.icthh.xm.commons.lep.LogicExtensionPoint;
 import com.icthh.xm.commons.lep.spring.LepService;
 import com.icthh.xm.commons.permission.annotation.PrivilegeDescription;
-import com.icthh.xm.tmf.ms.promotion.lep.keyresolver.PromotionIdKeyResolver;
 import com.icthh.xm.tmf.ms.promotion.lep.keyresolver.PromotionCreateKeyResolver;
 import com.icthh.xm.tmf.ms.promotion.lep.keyresolver.PromotionListKeyResolver;
 import com.icthh.xm.tmf.ms.promotion.web.api.PromotionApiDelegate;
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class PromotionDelegate implements PromotionApiDelegate {
 
     @Timed
-    @LogicExtensionPoint(value = "retrievePromotion", resolver = PromotionIdKeyResolver.class)
+    @LogicExtensionPoint(value = "RetrievePromotion")
     @PreAuthorize("hasPermission({'id': #id}, 'PROMOTION.GET')")
     @Override
     @PrivilegeDescription("Privilege to get a promotions")
@@ -33,7 +32,7 @@ public class PromotionDelegate implements PromotionApiDelegate {
     }
 
     @Timed
-    @LogicExtensionPoint(value = "createPromotion", resolver = PromotionCreateKeyResolver.class)
+    @LogicExtensionPoint(value = "CreatePromotion", resolver = PromotionCreateKeyResolver.class)
     @PreAuthorize("hasPermission({'promotion': #promotion}, 'PROMOTION.CREATE')")
     @Override
     @PrivilegeDescription("Privilege to create a promotion")
@@ -43,7 +42,7 @@ public class PromotionDelegate implements PromotionApiDelegate {
     }
 
     @Timed
-    @LogicExtensionPoint(value = "deletePromotion", resolver = PromotionIdKeyResolver.class)
+    @LogicExtensionPoint(value = "DeletePromotion")
     @PreAuthorize("hasPermission({'id': #id}, 'PROMOTION.DELETE')")
     @Override
     @PrivilegeDescription("Privilege to delete a promotion")
@@ -53,7 +52,7 @@ public class PromotionDelegate implements PromotionApiDelegate {
     }
 
     @Timed
-    @LogicExtensionPoint(value = "listPromotion", resolver = PromotionListKeyResolver.class)
+    @LogicExtensionPoint(value = "ListPromotion", resolver = PromotionListKeyResolver.class)
     @PreAuthorize("hasPermission({'fields': #fields, 'offset': #offset, 'limit': #limit}, 'PROMOTION.LIST')")
     @Override
     @PrivilegeDescription("Privilege to list promotions")
@@ -63,7 +62,7 @@ public class PromotionDelegate implements PromotionApiDelegate {
     }
 
     @Timed
-    @LogicExtensionPoint(value = "patchPromotion", resolver = PromotionCreateKeyResolver.class)
+    @LogicExtensionPoint(value = "PatchPromotion", resolver = PromotionCreateKeyResolver.class)
     @PreAuthorize("hasPermission({'id': #id, 'promotion': #promotion}, 'PROMOTION.PATCH')")
     @Override
     @PrivilegeDescription("Privilege to patch a promotion")

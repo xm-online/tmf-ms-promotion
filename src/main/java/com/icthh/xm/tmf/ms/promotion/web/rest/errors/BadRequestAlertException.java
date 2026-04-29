@@ -3,12 +3,12 @@ package com.icthh.xm.tmf.ms.promotion.web.rest.errors;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import org.zalando.problem.AbstractThrowableProblem;
-import org.zalando.problem.Status;
 
-public class BadRequestAlertException extends AbstractThrowableProblem {
+public class BadRequestAlertException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
+
+    private final URI type;
 
     private final String entityName;
 
@@ -19,10 +19,13 @@ public class BadRequestAlertException extends AbstractThrowableProblem {
     }
 
     public BadRequestAlertException(URI type, String defaultMessage, String entityName, String errorKey) {
-        super(type, defaultMessage, Status.BAD_REQUEST, null, null, null, getAlertParameters(entityName, errorKey));
+        super(defaultMessage);
+        this.type = type;
         this.entityName = entityName;
         this.errorKey = errorKey;
     }
+
+    public  URI getType() { return type; }
 
     public String getEntityName() {
         return entityName;
@@ -32,10 +35,10 @@ public class BadRequestAlertException extends AbstractThrowableProblem {
         return errorKey;
     }
 
-    private static Map<String, Object> getAlertParameters(String entityName, String errorKey) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("message", "error." + errorKey);
-        parameters.put("params", entityName);
-        return parameters;
+    public Map<String, Object> getParameters() {
+        return Map.of(
+            "message", "error." + errorKey,
+            "params", entityName
+        );
     }
 }

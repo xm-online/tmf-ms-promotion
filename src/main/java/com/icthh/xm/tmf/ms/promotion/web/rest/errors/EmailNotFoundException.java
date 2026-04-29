@@ -1,13 +1,10 @@
 package com.icthh.xm.tmf.ms.promotion.web.rest.errors;
 
-import org.zalando.problem.AbstractThrowableProblem;
-import org.zalando.problem.Status;
-
-public class EmailNotFoundException extends AbstractThrowableProblem {
+public class EmailNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     public EmailNotFoundException() {
-        super(ErrorConstants.EMAIL_NOT_FOUND_TYPE, "Email address not registered", Status.BAD_REQUEST);
+        super("Email address not registered");
     }
 }

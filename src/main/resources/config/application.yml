@@ -1,61 +1,52 @@
-# ===================================================================
-# Spring Boot configuration.
-#
-# This configuration will be overridden by the Spring profile you use,
-# for example application-dev.yml if you use the "dev" profile.
-#
-# More information on profiles: https://www.jhipster.tech/profiles/
-# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
-# ===================================================================
-
-# ===================================================================
-# Standard Spring Boot properties.
-# Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
-# ===================================================================
-
-feign:
-    hystrix:
-        enabled: true
-#    client:
-#        config:
-#            default:
-#                connectTimeout: 5000
-#                readTimeout: 5000
-
-# See https://github.com/Netflix/Hystrix/wiki/Configuration
-hystrix:
-    command:
-        default:
-            execution:
-                isolation:
-                    strategy: SEMAPHORE
-# See https://github.com/spring-cloud/spring-cloud-netflix/issues/1330
-#                    thread:
-#                        timeoutInMilliseconds: 10000
-    shareSecurityContext: true
-
 management:
     endpoints:
         web:
             base-path: /management
             exposure:
-                include: ['configprops', 'env', 'health', 'info', 'jhimetrics', 'logfile', 'loggers', 'prometheus', 'threaddump']
+                include:
+                    - configprops
+                    - env
+                    - health
+                    - info
+                    - jhimetrics
+                    - jhiopenapigroups
+                    - logfile
+                    - loggers
+                    - prometheus
+                    - threaddump
+                    - caches
+                    - metrics
+                    - liquibase
     endpoint:
         health:
-            show-details: when-authorized
+            show-details: when_authorized
+            roles: 'SUPER-ADMIN'
+            probes:
+                enabled: true
+            group:
+                liveness:
+                    include: livenessState
+                readiness:
+                    include: readinessState,db
+        jhimetrics:
+            enabled: true
     info:
         git:
             mode: full
+        env:
+            enabled: true
     health:
         mail:
             enabled: false # When using the MailService, configure an SMTP server and set this to true
-    metrics:
-        export:
-            # Prometheus is the default metrics backend
-            prometheus:
+    observations:
+        key-values:
+            application: ${spring.application.name}
+    prometheus:
+        metrics:
+            export:
                 enabled: true
                 step: 60
+    metrics:
         enable:
             http: true
             jvm: true
@@ -69,48 +60,109 @@ management:
                 all: 0, 0.5, 0.75, 0.95, 0.99, 1.0
         tags:
             application: ${spring.application.name}
-        web:
-            server:
-                auto-time-requests: true
 
 spring:
-    application:
-        name: promotion
+    main:
+        application:
+            name: promotion
+        allow-bean-definition-overriding: true
+        web-application-type: servlet
     cloud:
+        # if you need to start service without consul, use next configuration and disable consul by spring.cloud.consul.enabled
+        #    discovery:
+        #      client:
+        #        simple:
+        #          instances:
+        #            config:
+        #              - instanceId: config
+        #                serviceId: config
+        #                host: localhost
+        #                port: 8084
         consul:
+            enabled: true
             discovery:
                 healthCheckPath: /management/health
-                instanceId: ${spring.application.name}:${spring.application.instance-id:${random.value}}
+                instanceId: promotion:${spring.application.instance-id:${random.value}}
+                service-name: promotion
             config:
                 watch:
                     enabled: false
+    config:
+        group:
+            dev:
+                - dev
+                - api-docs
     jmx:
-        enabled: false
+        enabled: true
+    data:
+        jpa:
+            repositories:
+                bootstrap-mode: default
     jpa:
         open-in-view: false
-        properties:
-            hibernate.jdbc.time_zone: UTC
         hibernate:
             ddl-auto: none
             naming:
-                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
-                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+                physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+                implicit-strategy: org.springframework.boot.hibernate.SpringImplicitNamingStrategy
+        properties:
+            hibernate.jdbc.time_zone: UTC
+            hibernate.timezone.default_storage: NORMALIZE
+            hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
+            hibernate.id.new_generator_mappings: true
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
+            hibernate.generate_statistics: false
+            # modify batch size as necessary
+            hibernate.jdbc.batch_size: 25
+            hibernate.order_inserts: true
+            hibernate.order_updates: true
+            hibernate.query.fail_on_pagination_over_collection_fetch: true
+            hibernate.query.in_clause_parameter_padding: true
+    jackson:
+        deserialization:
+            fail-on-unknown-properties: false
+        serialization:
+            INDENT_OUTPUT: true
+        default-property-inclusion: non_empty
+        mapper:
+            sort-properties-alphabetically: false
+    kafka:
+        bootstrap-servers: localhost:9092
+        #  To start using feign client with authentication, use this configuration and provide correct
+        #  token-uri, client-id and client-secret
+    security:
+        oauth2:
+            client:
+                provider:
+                    uaa:
+                        token-uri: http://localhost:9999/oauth/token
+                registration:
+                    uaa:
+                        authorization-grant-type: client_credentials
+                        client-id: internal
+                        client-secret: internal
     messages:
         basename: i18n/messages
-    main:
-        allow-bean-definition-overriding: true
     mvc:
-        favicon:
-            enabled: false
+        problemdetails:
+            enabled: true
+    task:
+        execution:
+            thread-name-prefix: xm-ms-promotion-task-
+            pool:
+                core-size: 2
+                max-size: 50
+                queue-capacity: 10000
+        scheduling:
+            thread-name-prefix: xm-ms-promotion-scheduling-
+            pool:
+                size: 2
     thymeleaf:
         mode: HTML
     output:
         ansi:
             console-available: true
-security:
-    oauth2:
-        resource:
-            filter-order: 3
 
 server:
     servlet:
@@ -118,10 +170,18 @@ server:
             cookie:
                 http-only: true
 
+springdoc:
+    show-actuator: true
+
+xm-config:
+    enabled: true
+    xmConfigUrl: http://config
+    kafka-config-topic: config_topic
+
 # Properties to be exposed on the /info management endpoint
 info:
     # Comma separated list of profiles that will trigger the ribbon to show
-    display-ribbon-on-profiles: "dev"
+    display-ribbon-on-profiles: 'dev'
 
 # ===================================================================
 # JHipster specific properties
@@ -130,55 +190,29 @@ info:
 # ===================================================================
 
 jhipster:
-    async:
-        core-pool-size: 2
-        max-pool-size: 50
-        queue-capacity: 10000
-    # By default CORS is disabled. Uncomment to enable.
-    #cors:
-        #allowed-origins: "*"
-        #allowed-methods: "*"
-        #allowed-headers: "*"
-        #exposed-headers: "Authorization,Link,X-Total-Count"
-        #allow-credentials: true
-        #max-age: 1800
-    mail:
-        from: promotion@localhost
-    swagger:
-        default-include-pattern: /api/.*
-        title: promotion API
-        description: promotion API documentation
-        version: 0.0.1
-        terms-of-service-url:
-        contact-name:
-        contact-url:
-        contact-email:
-        license:
-        license-url:
-base-package: com.icthh.xm.tmf.ms.promotion
-xm-config:
-    enabled: true
-    xm-config-url: http://config
-    kafka-config-topic: config_topic
-# ===================================================================
-# Application specific properties
-# Add your own application properties here, see the ApplicationProperties class
-# to have type-safe configuration, like in the JHipsterProperties above
-#
-# More documentation is available at:
-# https://www.jhipster.tech/common-application-properties/
-# ===================================================================
+    clientApp:
+        name: 'promotionApp'
+    api-docs:
+        default-include-pattern: ${server.servlet.context-path:}/api/**
+        management-include-pattern: ${server.servlet.context-path:}/management/**
+        title: Promotion API
+        description: Promotion API documentation
+    security:
+        content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
 
 application:
-    timelines-enabled: true
+    tenant-ignored-path-list: /v2/api-docs, /api/profile-info, /swagger-resources/configuration/ui, /management/health, /management/prometheus
+    timeline-ignored-http-methods:
+
+    timelines-enabled: false
     kafka-enabled: true
+    scheduler-enabled: false
+
+    tenant-with-creation-access-list: XM, MANAGER
     kafka-system-topic: system_topic
     kafka-system-queue: system_queue
-    tenant-ignored-path-list: /swagger-resources/configuration/ui, /management/health, /oauth/token_key, /h2-console
-    lep:
-        tenant-script-storage: XM_MS_CONFIG
-        lep-resource-path-pattern: /config/tenants/{tenantName}/entity/lep/resources/**/*
-    retry:
-        max-attempts: 3
-        delay: 1000 #in milliseconds
-        multiplier: 2
+    kafka-metadata-max-age: 60000 #in milliseconds
+    kafkaHealth:
+        enabled: true
+    config-fetch-all:
+        enabled: false

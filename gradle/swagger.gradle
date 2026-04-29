@@ -1,7 +1,30 @@
-/*
- * Plugin that provides API-first development using OpenAPI-generator to
- * generate Spring-MVC endpoint stubs at compile time from an OpenAPI definition file
- */
+jacoco {
+    toolVersion = "0.8.14"
+}
+
+jacocoTestReport {
+    executionData tasks.withType(Test)
+    classDirectories.from = files(sourceSets.main.output.classesDirs)
+    sourceDirectories.from = files(sourceSets.main.java.srcDirs)
+
+    reports {
+        xml.required = true
+    }
+}
+
+file("sonar-project.properties").withReader {
+    Properties sonarProperties = new Properties()
+    sonarProperties.load(it)
+
+    sonarProperties.each { key, value ->
+        sonarqube {
+            properties {
+                property key, value
+            }
+        }
+    }
+}
+
 apply plugin: 'org.openapi.generator'
 
 openApiGenerate {
@@ -13,9 +36,16 @@ openApiGenerate {
     apiFilesConstrainedTo = [""]
     modelFilesConstrainedTo = [""]
     supportingFilesConstrainedTo = ["ApiUtil.java"]
-    configOptions = [delegatePattern: "true"]
+    configOptions = [
+        delegatePattern: "true",
+        useSpringBoot4: "true",
+        useJakartaEe: "true",
+        interfaceOnly: "false"
+    ]
     validateSpec = true
-    importMappings = [Problem:"org.zalando.problem.Problem"]
+    importMappings = [
+        Problem: "org.zalando.problem.Problem"
+    ]
 }
 
 sourceSets {
